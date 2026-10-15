@@ -6,7 +6,7 @@
 //   ENQUIRY_WEBHOOK_URL     the Apps Script web-app URL (ends in /exec)
 //   ENQUIRY_WEBHOOK_SECRET  any long random string; must match SECRET in the Apps Script
 
-const MAX = { name: 100, company: 120, reach: 120, message: 3000 };
+const MAX = { name: 100, company: 120, phone: 30, email: 120, message: 3000 };
 const hits = new Map(); // best-effort per-instance rate limit: 5 enquiries / 10 min / IP
 
 // Strip control characters but keep tabs and line breaks (messages are multi-line).
@@ -33,11 +33,13 @@ export default async function handler(req, res) {
   const lead = {
     name: clean(body.name, MAX.name),
     company: clean(body.company, MAX.company),
-    reach: clean(body.reach, MAX.reach),
+    phone: clean(body.phone, MAX.phone),
+    email: clean(body.email, MAX.email),
     message: clean(body.message, MAX.message),
   };
-  const reachOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.reach) || lead.reach.replace(/\D/g, '').length >= 9;
-  if (!lead.name || !lead.message || !reachOk) return res.status(400).json({ ok: false });
+  const phoneOk = lead.phone.replace(/\D/g, '').length >= 9;
+  const emailOk = !lead.email || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email);
+  if (!lead.name || !lead.message || !phoneOk || !emailOk) return res.status(400).json({ ok: false });
 
   const url = process.env.ENQUIRY_WEBHOOK_URL;
   const secret = process.env.ENQUIRY_WEBHOOK_SECRET;
@@ -55,7 +57,8 @@ export default async function handler(req, res) {
         receivedAt: new Date().toISOString(),
         name: cell(lead.name),
         company: cell(lead.company),
-        reach: cell(lead.reach),
+        phone: cell(lead.phone),
+        email: cell(lead.email),
         message: cell(lead.message),
       }),
       redirect: 'follow',

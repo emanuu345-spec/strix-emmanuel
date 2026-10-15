@@ -26,11 +26,11 @@ function doPost(e) {
     let sheet = ss.getSheetByName(SHEET_NAME);
     if (!sheet) {
       sheet = ss.insertSheet(SHEET_NAME);
-      sheet.appendRow(['Received', 'Name', 'Company', 'Email / phone', 'Message', 'Status']);
+      sheet.appendRow(['Received', 'Name', 'Company', 'Phone', 'Email', 'Enquiry', 'Status']);
       sheet.setFrozenRows(1);
-      sheet.getRange('A1:F1').setFontWeight('bold');
+      sheet.getRange('A1:G1').setFontWeight('bold');
     }
-    sheet.appendRow([new Date(d.receivedAt || Date.now()), d.name, d.company, d.reach, d.message, 'New']);
+    sheet.appendRow([new Date(d.receivedAt || Date.now()), d.name, d.company, d.phone, d.email, d.message, 'New']);
 
     if (NOTIFY_EMAIL) {
       MailApp.sendEmail(NOTIFY_EMAIL, 'New website enquiry: ' + d.name, 'Open your Website enquiries sheet:\n' + ss.getUrl());

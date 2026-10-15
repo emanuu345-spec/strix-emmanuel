@@ -25,9 +25,6 @@
     <div class="loader__bar"><span></span></div>
   </div>
 
-  <!-- ── Cursor ────────────────────────────────── -->
-  <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
-
   <!-- ── Nav ───────────────────────────────────── -->
   <header class="nav">
     <a href="#top" class="nav__logo" aria-label="Emmanuel, home">
@@ -185,16 +182,17 @@
       <form class="contact__form fade-up js-form" novalidate>
         <div class="field"><input id="f-name" name="name" required placeholder=" " autocomplete="name" /><label for="f-name">Your name</label></div>
         <div class="field"><input id="f-company" name="company" placeholder=" " autocomplete="organization" /><label for="f-company">Company</label></div>
-        <div class="field field--wide"><input id="f-reach" name="reach" required placeholder=" " autocomplete="email" inputmode="email" maxlength="120" /><label for="f-reach">Email or phone number</label></div>
-        <div class="field field--wide"><textarea id="f-msg" name="message" required rows="3" placeholder=" " maxlength="3000"></textarea><label for="f-msg">What do you want to build?</label></div>
+        <div class="field"><input id="f-phone" name="phone" type="tel" required placeholder=" " autocomplete="tel" inputmode="tel" maxlength="30" /><label for="f-phone">Phone number</label></div>
+        <div class="field"><input id="f-email" name="email" type="email" placeholder=" " autocomplete="email" maxlength="120" /><label for="f-email">Email (optional)</label></div>
+        <div class="field field--wide"><textarea id="f-msg" name="message" required rows="3" placeholder=" " maxlength="3000"></textarea><label for="f-msg">How can I help? Tell me about your project or question</label></div>
         <div class="contact__hp" aria-hidden="true"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off" /></label></div>
         <div class="contact__actions field--wide">
           <button type="submit" class="btn btn--light magnetic" data-hover><span>Send enquiry</span></button>
           <p class="contact__status js-form-status" role="status" aria-live="polite"></p>
         </div>
         <div class="contact__done" role="status">
-          <h3>Thank you, <span class="js-done-name"></span>.</h3>
-          <p>Your enquiry is in. I’ll reply within 24 hours.</p>
+          <h3>Thank you<span class="js-done-name"></span>.</h3>
+          <p>Your details are in. I’ll call or message you within 24 hours.</p>
         </div>
       </form>
     </section>

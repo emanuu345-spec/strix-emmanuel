@@ -13,7 +13,7 @@ npm run build   # outputs dist/ (deploy anywhere static, e.g. Vercel)
 ## Contact form → private enquiries sheet
 
 The contact form sends with one tap to `/api/enquiry` (a Vercel serverless function in `api/enquiry.js`).
-It validates the enquiry, drops spam (hidden honeypot field + rate limit), and appends a row to a private
+It validates the enquiry, drops spam (hidden honeypot field + rate limit), and appends a row (name, company, phone, email, enquiry) to a private
 Google Sheet that only you can see. Visitors never see an email address or get redirected.
 
 One-time setup:

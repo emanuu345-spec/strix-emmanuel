@@ -26,7 +26,7 @@ function render() {
   // work
   $('.js-work').innerHTML = projects
     .map(
-      (p, i) => `<article class="work-card" ${p.url ? 'data-cursor="Visit"' : ''}>
+      (p, i) => `<article class="work-card">
         <div class="work-card__meta">
           <div class="work-card__top"><span>${pad(i + 1)} / ${pad(projects.length)}</span><span>${esc(p.kind)} · ${p.year}</span></div>
           <h3 class="work-card__name">${esc(p.name)}</h3>
@@ -251,17 +251,10 @@ function animations() {
   });
 
 
-  // work cards: sticky stack, earlier cards shrink back as the next one slides over
-  const cards = $$('.work-card');
-  cards.forEach((card, i) => {
+  // work cards: normal flow (fully readable), with a gentle drift on the mock UI
+  $$('.work-card').forEach((card) => {
     const visual = $('.mock', card);
-    gsap.fromTo(visual, { yPercent: 12, rotate: -2 }, { yPercent: -6, rotate: 0, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
-    const next = cards[i + 1];
-    if (!next || !matchMedia('(min-width: 961px)').matches) return;
-    gsap.to(card, {
-      scale: 0.9, filter: 'brightness(0.55)', ease: 'none',
-      scrollTrigger: { trigger: next, start: 'top bottom', end: 'top 96px', scrub: true },
-    });
+    gsap.fromTo(visual, { yPercent: 8, rotate: -2 }, { yPercent: -4, rotate: 0, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
   });
   $$('.mock-farm .chart b').forEach((b, i) => gsap.from(b, { scaleY: 0, duration: 1.2, ease: 'expo.out', delay: i * 0.05, scrollTrigger: { trigger: b.parentElement, start: 'top 85%' } }));
 
@@ -365,14 +358,17 @@ function interactions() {
   // contact form → one tap, saved straight to the enquiries inbox via /api/enquiry
   const form = $('.js-form');
   const status = $('.js-form-status');
-  const validReach = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || v.replace(/\D/g, '').length >= 9;
+  const valid = {
+    phone: (v) => v.replace(/\D/g, '').length >= 9,
+    email: (v) => !v || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v),
+  };
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (form.classList.contains('is-sending')) return;
     let ok = true;
-    $$('[required]', form).forEach((f) => {
+    $$('input:not([name="website"]), textarea', form).forEach((f) => {
       const v = f.value.trim();
-      const bad = !v || (f.name === 'reach' && !validReach(v));
+      const bad = (f.required && !v) || (!!valid[f.name] && !valid[f.name](v));
       f.parentElement.classList.toggle('is-error', bad);
       if (bad) ok = false;
     });
@@ -383,7 +379,8 @@ function interactions() {
     try {
       const res = await fetch('/api/enquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
       if (!res.ok) throw new Error(String(res.status));
-      $('.js-done-name').textContent = d.name.trim().split(/\s+/)[0];
+      // greet the visitor by the first name they typed
+      $('.js-done-name').textContent = `, ${d.name.trim().split(/\s+/)[0]}`;
       form.classList.add('is-sent');
       ScrollTrigger.refresh();
     } catch {
@@ -394,23 +391,6 @@ function interactions() {
   });
 
   if (!finePointer || reduced) return;
-
-  // custom cursor
-  const cursor = $('.cursor');
-  const label = $('.cursor__label');
-  const xTo = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3' });
-  const yTo = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3' });
-  gsap.set(cursor, { autoAlpha: 0 });
-  window.addEventListener('pointermove', (e) => { gsap.set(cursor, { autoAlpha: 1 }); xTo(e.clientX); yTo(e.clientY); }, { passive: true });
-  document.addEventListener('pointerover', (e) => {
-    const labelled = e.target.closest('[data-cursor]');
-    const hover = e.target.closest('a, button, [data-hover]');
-    cursor.classList.toggle('is-label', !!labelled);
-    label.textContent = labelled ? labelled.dataset.cursor : '';
-    cursor.classList.toggle('is-hover', !labelled && !!hover);
-  });
-  document.addEventListener('pointerleave', () => gsap.to(cursor, { autoAlpha: 0 }));
-  document.addEventListener('pointerenter', () => gsap.to(cursor, { autoAlpha: 1 }));
 
   // magnetic buttons
   $$('.magnetic').forEach((el) => {
