@@ -60,7 +60,7 @@
     <!-- ── Hero ────────────────────────────────── -->
     <section class="hero" data-theme="dark">
       <div class="hero__grid" aria-hidden="true"></div>
-      <p class="eyebrow hero__eyebrow"><span class="dot"></span> Nakuru · Building for all of Kenya</p>
+      <p class="eyebrow hero__eyebrow"><span class="dot"></span> Taking on new projects</p>
       <h1 class="hero__title split-rise">
         I build <em>intelligent</em> software that <em>works.</em>
       </h1>
@@ -102,8 +102,8 @@
     <section class="numbers" data-theme="light">
       <div class="numbers__grid">
         <div class="num"><span class="num__val" data-count="4">0</span><span class="num__plus">+</span><p>production systems shipped</p></div>
-        <div class="num"><span class="num__val" data-count="150">0</span><span class="num__plus">+</span><p>automated security checks on a single ERP</p></div>
-        <div class="num"><span class="num__val" data-count="3">0</span><p>platforms: web, Android, AI</p></div>
+        <div class="num"><span class="num__val" data-count="24">0</span><span class="num__plus">h</span><p>to get an honest reply to your enquiry</p></div>
+        <div class="num"><span class="num__val" data-count="4">0</span><p>industries served: education, property, farming, business</p></div>
         <div class="num"><span class="num__val" data-count="100">0</span><span class="num__plus">%</span><p>code &amp; data ownership for clients</p></div>
       </div>
     </section>
@@ -141,8 +141,8 @@
         <div class="about__copy">
           <p class="eyebrow">About me</p>
           <h2 class="section-title split-rise">Hi, I’m <em>Emmanuel.</em></h2>
-          <p class="fade-up">I build software end to end, from the database schema to the agent prompts to the last pixel of the animation. So far I’ve shipped an AI study companion with voice and document search, a property-management ERP with M-Pesa built in, a dairy-farm operating system, and a native Android launcher.</p>
-          <p class="fade-up">I’m also the founder of Strix, a company building AI agents for businesses across Africa. Here, I take on hands-on client work directly: no agency layers or endless retainers, just systems that work, delivered fast and fully yours.</p>
+          <p class="fade-up">I take your idea from first conversation to a finished product your customers love, and I handle every step myself. So far I’ve shipped an AI study companion for students, property management for landlords with M-Pesa built in, a dairy-farm management app, and Strix, a team of AI agents for businesses.</p>
+          <p class="fade-up">Strix is my company, building AI agents for businesses across Africa. Here, I take on hands-on client work directly: no agency layers or endless retainers, just systems that work, delivered fast and fully yours.</p>
           <div class="about__sign fade-up">— Emmanuel</div>
         </div>
       </div>
@@ -185,10 +185,16 @@
       <form class="contact__form fade-up js-form" novalidate>
         <div class="field"><input id="f-name" name="name" required placeholder=" " autocomplete="name" /><label for="f-name">Your name</label></div>
         <div class="field"><input id="f-company" name="company" placeholder=" " autocomplete="organization" /><label for="f-company">Company</label></div>
-        <div class="field field--wide"><textarea id="f-msg" name="message" required rows="3" placeholder=" "></textarea><label for="f-msg">What do you want to build?</label></div>
+        <div class="field field--wide"><input id="f-reach" name="reach" required placeholder=" " autocomplete="email" inputmode="email" maxlength="120" /><label for="f-reach">Email or phone number</label></div>
+        <div class="field field--wide"><textarea id="f-msg" name="message" required rows="3" placeholder=" " maxlength="3000"></textarea><label for="f-msg">What do you want to build?</label></div>
+        <div class="contact__hp" aria-hidden="true"><label>Leave this empty <input name="website" tabindex="-1" autocomplete="off" /></label></div>
         <div class="contact__actions field--wide">
-          <button type="submit" class="btn btn--light magnetic" data-hover data-via="whatsapp"><span>Send via WhatsApp</span></button>
-          <button type="submit" class="btn btn--ghost magnetic" data-hover data-via="email"><span>Send via email</span></button>
+          <button type="submit" class="btn btn--light magnetic" data-hover><span>Send enquiry</span></button>
+          <p class="contact__status js-form-status" role="status" aria-live="polite"></p>
+        </div>
+        <div class="contact__done" role="status">
+          <h3>Thank you, <span class="js-done-name"></span>.</h3>
+          <p>Your enquiry is in. I’ll reply within 24 hours.</p>
         </div>
       </form>
     </section>

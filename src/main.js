@@ -32,7 +32,7 @@ function render() {
           <h3 class="work-card__name">${esc(p.name)}</h3>
           <p class="work-card__summary">${esc(p.summary)}</p>
           <ul class="work-card__shipped">${p.shipped.map((s) => `<li>${esc(s)}</li>`).join('')}</ul>
-          <div class="work-card__stack">${p.stack.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div>
+          ${p.tags?.length ? `<div class="work-card__stack">${p.tags.map((s) => `<span class="chip">${esc(s)}</span>`).join('')}</div>` : ''}
           ${p.url ? `<a class="work-card__link" href="${p.url}" target="_blank" rel="noopener">See it live ↗</a>` : ''}
         </div>
         <div class="work-card__visual">${mock(p.mock)}</div>
@@ -90,15 +90,15 @@ function mock(type) {
   if (type === 'chat')
     return `<div class="mock mock-window mock-chat"><div class="mock-bar"><i></i><i></i><i></i></div><div class="mock-body">
       <div class="bubble me">When is my Data Structures CAT and what should I revise?</div>
-      <div class="bubble ai">Thursday, 10:00, in LT2. Focus on trees and hashing; you flagged both as weak last week. I made you a 3-day plan.<span class="src">↳ from: DSA_Notes_Week6.pdf</span></div>
-      <div class="voice"><span class="wave">${'<b></b>'.repeat(9).replace(/<b><\/b>/g, (m, o) => `<b style="animation-delay:${(o % 7) * 0.09}s"></b>`)}</span><span>Jarvis is listening…</span></div>
+      <div class="bubble ai">Thursday, 10:00, in LT2. Focus on trees and hashing; you flagged both as weak last week. I made you a 3-day plan.<span class="src">↳ from: your Week 6 notes</span></div>
+      <div class="voice"><span class="wave">${'<b></b>'.repeat(9).replace(/<b><\/b>/g, (m, o) => `<b style="animation-delay:${(o % 7) * 0.09}s"></b>`)}</span><span>Listening…</span></div>
     </div></div>`;
   if (type === 'erp')
     return `<div class="mock mock-window mock-erp"><div class="mock-bar"><i></i><i></i><i></i></div><div class="mock-body">
       <div class="kpis"><div class="kpi"><small>Collected</small><strong>KES 1.42M</strong></div><div class="kpi"><small>Occupancy</small><strong>94%</strong></div><div class="kpi"><small>Arrears</small><strong>6</strong></div></div>
       <table><tbody>
         <tr><td>Unit A4 · J. Wanjiru</td><td><span class="tag fill">M-Pesa · Paid</span></td></tr>
-        <tr><td>Unit B1 · P. Otieno</td><td><span class="tag">STK sent</span></td></tr>
+        <tr><td>Unit B1 · P. Otieno</td><td><span class="tag">Reminder sent</span></td></tr>
         <tr><td>Unit C7 · M. Kamau</td><td><span class="tag fill">M-Pesa · Paid</span></td></tr>
         <tr><td>Unit A9 · Vacant</td><td><span class="tag">Listed</span></td></tr>
       </tbody></table>
@@ -111,9 +111,16 @@ function mock(type) {
       <div class="rows"><div class="row"><span>Cow #014 · Neema</span><span>21.4 L</span></div><div class="row"><span>Cow #022 · Baraka</span><span>19.8 L</span></div></div>
     </div></div>`;
   }
-  return `<div class="mock mock-phone"><div class="clock">09:41</div><div class="date">Thursday, 15 October</div>
-    <div class="apps"><span>Spotify</span><span>WhatsApp</span><span>Claude</span><span>Camera</span><span>Phone</span></div>
-    <div class="arc">${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').filter((_, i) => i % 2 === 0).map((l) => `<span>${l}</span>`).join('')}</div></div>`;
+  const agents = [
+    ['S', 'Sales', 'Followed up 14 new leads', 'Working'],
+    ['C', 'Customer Support', 'Answered 38 customer questions', 'Working'],
+    ['F', 'Finance', 'Weekly cash report ready', 'Review'],
+    ['M', 'Marketing', 'Drafted 3 posts for this week', 'Done'],
+  ];
+  return `<div class="mock mock-window mock-agents"><div class="mock-bar"><i></i><i></i><i></i></div><div class="mock-body">
+    <div class="agents-head"><div><small>Your AI team</small><div class="big" style="font-size:22px;letter-spacing:-0.03em;font-weight:500">Good morning</div></div><span class="tag fill">4 agents on</span></div>
+    ${agents.map(([a, n, t, s]) => `<div class="agent"><span class="agent__av">${a}</span><span>${n}<span class="agent__task">${t}</span></span><span class="tag${s === 'Review' ? ' fill' : ''}">${s === 'Working' ? '<i class="live"></i>' : ''}${s}</span></div>`).join('')}
+  </div></div>`;
 }
 
 /* ───────────────────────── Text splitting ───────────────────────── */
@@ -355,25 +362,35 @@ function interactions() {
   });
 
 
-  // contact form → WhatsApp or email, prefilled
+  // contact form → one tap, saved straight to the enquiries inbox via /api/enquiry
   const form = $('.js-form');
-  let via = 'whatsapp';
-  $$('button[data-via]', form).forEach((b) => b.addEventListener('click', () => (via = b.dataset.via)));
-  form.addEventListener('submit', (e) => {
+  const status = $('.js-form-status');
+  const validReach = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) || v.replace(/\D/g, '').length >= 9;
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (form.classList.contains('is-sending')) return;
     let ok = true;
     $$('[required]', form).forEach((f) => {
-      const bad = !f.value.trim();
+      const v = f.value.trim();
+      const bad = !v || (f.name === 'reach' && !validReach(v));
       f.parentElement.classList.toggle('is-error', bad);
       if (bad) ok = false;
     });
-    if (!ok) return;
+    if (!ok) { status.textContent = 'Please fill in the highlighted fields.'; return; }
     const d = Object.fromEntries(new FormData(form));
-    const text = `Hi Emmanuel, I'm ${d.name}${d.company ? ` from ${d.company}` : ''}.\n\n${d.message}`;
-    const url = via === 'email'
-      ? `mailto:${contact.email}?subject=${encodeURIComponent(`Project enquiry: ${d.name}`)}&body=${encodeURIComponent(text)}`
-      : waLink(text);
-    window.open(url, via === 'email' ? '_self' : '_blank', 'noopener');
+    form.classList.add('is-sending');
+    status.textContent = 'Sending…';
+    try {
+      const res = await fetch('/api/enquiry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(d) });
+      if (!res.ok) throw new Error(String(res.status));
+      $('.js-done-name').textContent = d.name.trim().split(/\s+/)[0];
+      form.classList.add('is-sent');
+      ScrollTrigger.refresh();
+    } catch {
+      status.innerHTML = `Something went wrong sending that. Please try again, or <a href="${waLink('Hi Emmanuel, I’d like to talk about a project.')}" target="_blank" rel="noopener">message me on WhatsApp</a>.`;
+    } finally {
+      form.classList.remove('is-sending');
+    }
   });
 
   if (!finePointer || reduced) return;

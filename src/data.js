@@ -17,73 +17,73 @@ export const contact = {
 };
 
 // What's shipped. Real products only — this is your credibility.
+// Client-facing copy: what each product does for its users, never how it's built (no stack, auth or infra details).
 export const projects = [
   {
     id: 'student-companion',
     name: 'Student Companion',
-    kind: 'AI product · Web + Android',
+    kind: 'Study app · Web + Android',
     year: '2026',
     summary:
-      'An AI study companion with a voice assistant called Jarvis. It knows your timetable, reads your notes, and answers from your own documents.',
+      'An AI study companion that knows your timetable, reads your notes and answers questions from your own documents.',
     shipped: [
-      'Voice assistant: speech-to-text and text-to-speech, with daily usage caps',
-      'Document knowledge base (RAG): Jarvis answers from uploaded notes',
-      'M-Pesa subscriptions via IntaSend, with free trial and paywall',
-      'Google sign-in, cross-device sync, Doze-safe Android reminders',
+      'Talk to it: ask questions out loud and hear the answers back',
+      'Upload your notes and get answers drawn straight from them',
     ],
-    stack: ['React', 'Capacitor', 'Node', 'Prisma', 'Postgres', 'LLMs', 'ElevenLabs'],
+    tags: [],
     mock: 'chat',
-    url: '', // TODO: Play Store / live link
+    url: 'https://student-companion-ruby.vercel.app/',
   },
   {
     id: 'oxe-erp',
     name: 'OXE ERP',
-    kind: 'Property-management ERP',
+    kind: 'Property management',
     year: '2026',
     summary:
-      'A property-management ERP for Kenyan landlords. It covers units, tenants, rent and M-Pesa collections, plus a tenant portal and roles for every team member.',
+      'Property management for Kenyan landlords and agents. Every unit, tenant and shilling of rent in one place, so nothing slips through the cracks.',
     shipped: [
-      'Single role and permission matrix, enforced on every API route',
-      'Tenant portal with M-Pesa STK push rent payments',
-      '150+ automated authorization and role checks before every release',
-      'Google sign-in, 30-day sliding sessions, transactional email and SMS',
+      'Tenants pay rent by M-Pesa in one tap, and each payment lands on the right unit automatically',
+      'A live view of collections, occupancy and arrears across all your properties',
+      'A self-service portal where tenants see their balance, receipts and notices',
+      'Each team member, from caretaker to accountant, sees exactly what their job needs',
     ],
-    stack: ['React', 'Node', 'Prisma', 'Postgres', 'M-Pesa', 'Brevo'],
+    tags: ['Landlords', 'Property agents', 'M-Pesa'],
     mock: 'erp',
-    url: '',
+    url: 'https://oxe-erp-react.vercel.app/',
   },
   {
     id: 'farm-flow',
     name: 'Farm Flow OS',
-    kind: 'Operations platform · Agritech',
+    kind: 'Dairy farm management',
     year: '2026',
     summary:
-      'An operating system for dairy farms. It tracks herds, milk yields and daily operations so the farmer runs on numbers, not guesswork.',
+      'Run your dairy farm on numbers, not guesswork. Track every cow, every litre and every shilling from your phone.',
     shipped: [
-      'Herd and per-cow milk-yield tracking',
-      'Phone-first daily operations dashboard for owner and staff',
-      'M-Pesa till payments with idempotent reconciliation',
-      'JWT auth, rate-limited login, serverless API on Vercel',
+      'Record milk per cow and spot your best and weakest producers at a glance',
+      'Herd records for health, breeding and history, always on hand',
+      'A simple daily dashboard for the owner and the farm staff',
+      'Milk sales and M-Pesa payments tracked, so the books add up',
     ],
-    stack: ['React', 'TypeScript', 'Express', 'Postgres', 'M-Pesa Daraja'],
+    tags: ['Dairy farmers', 'Phone-first', 'M-Pesa'],
     mock: 'farm',
     url: 'https://farm-flow-os-sigma.vercel.app',
   },
   {
-    id: 'mist',
-    name: 'Mist Launcher',
-    kind: 'Android · Consumer',
+    id: 'strix',
+    name: 'Strix',
+    kind: 'AI agents for business',
     year: '2026',
     summary:
-      'A native Android home screen with two switchable personalities: a minimal, wallpaper-forward list and an iOS-style app library with its own control center.',
+      'Give your business its own team of AI agents. Strix gives every department a digital teammate that works around the clock.',
     shipped: [
-      'Two switchable home-screen modes, with favorites and settings',
-      'Control center with real torch, volume and brightness controls',
-      'Designed web-first, then built natively in Jetpack Compose',
+      'Ready-made agents for sales, customer support, marketing, finance and operations',
+      'Agents answer customers, follow up on leads and draft reports while you focus on growth',
+      'Custom agents shaped around how your business actually works',
+      'You stay in charge: review, approve and guide every agent from one place',
     ],
-    stack: ['Kotlin', 'Jetpack Compose', 'Android'],
-    mock: 'launcher',
-    url: '',
+    tags: ['Businesses', 'Founders', 'Teams'],
+    mock: 'agents',
+    url: 'https://strix-lime.vercel.app/',
   },
 ];
 
@@ -105,8 +105,8 @@ export const services = [
     body: 'Agents built for your one-off workflows. They use your tools, follow your rules and take busywork off your team.',
   },
   {
-    title: 'Knowledge systems (RAG)',
-    body: 'Ask your documents anything. Private search grounded in your company’s own data.',
+    title: 'Ask-your-documents assistants',
+    body: 'Ask your documents anything. A private assistant that answers from your company’s own files.',
   },
   {
     title: 'Web & mobile apps',
@@ -114,7 +114,7 @@ export const services = [
   },
   {
     title: 'Payments & integrations',
-    body: 'M-Pesa, card payments, subscriptions, email, SMS and the APIs your business already runs on.',
+    body: 'M-Pesa, card payments, subscriptions, email, SMS and the other tools your business already runs on.',
   },
 ];
 
