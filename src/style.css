@@ -224,9 +224,15 @@ section { position: relative; padding: clamp(96px, 14vw, 200px) var(--gutter); }
 .manifesto__text + .manifesto__text { margin-top: 1.2em; }
 
 /* ───────────────────────── Work ───────────────────────── */
-.work__stack { max-width: 1400px; margin: 0 auto; display: grid; gap: clamp(20px, 3vw, 40px); }
+.work__stack { max-width: 1400px; margin: 0 auto; display: grid; gap: 6vh; }
+/* Sticky stack. --stick is set in JS: 96px when the card fits the screen, otherwise
+   negative so a tall card scrolls fully into view (link included) before it pins. */
 .work-card {
-  position: relative;
+  position: sticky;
+  top: var(--stick, 96px);
+  min-height: min(78vh, 780px);
+  transform-origin: 50% 0;
+  will-change: transform, opacity;
   border-radius: var(--radius);
   background: var(--black);
   color: var(--white);
@@ -470,7 +476,7 @@ section { position: relative; padding: clamp(96px, 14vw, 200px) var(--gutter); }
   .nav__links, .nav__cta { display: none; }
   .nav__burger { display: block; }
   .nav { height: 58px; padding: 0 6px 0 18px; }
-  .work-card { grid-template-columns: 1fr; }
+  .work-card { grid-template-columns: 1fr; min-height: 0; }
   .work-card__visual { min-height: 300px; order: -1; }
   .numbers__grid { grid-template-columns: 1fr 1fr; }
   .num:nth-child(3) { padding-left: 0; border-left: 0; }

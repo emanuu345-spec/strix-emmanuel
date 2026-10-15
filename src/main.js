@@ -251,10 +251,17 @@ function animations() {
   });
 
 
-  // work cards: normal flow (fully readable), with a gentle drift on the mock UI
-  $$('.work-card').forEach((card) => {
+  // work cards: sticky stack. Each earlier card shrinks back and fades out as the next one slides over.
+  const cards = $$('.work-card');
+  cards.forEach((card, i) => {
     const visual = $('.mock', card);
     gsap.fromTo(visual, { yPercent: 8, rotate: -2 }, { yPercent: -4, rotate: 0, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } });
+    const next = cards[i + 1];
+    if (!next) return;
+    gsap.fromTo(card, { scale: 1, autoAlpha: 1 }, {
+      scale: 0.92, autoAlpha: 0, ease: 'power1.in',
+      scrollTrigger: { trigger: next, start: 'top 85%', end: () => `top ${Math.max(0, parseFloat(next.style.getPropertyValue('--stick')) || NAV_GAP)}px`, scrub: true, invalidateOnRefresh: true },
+    });
   });
   $$('.mock-farm .chart b').forEach((b, i) => gsap.from(b, { scaleY: 0, duration: 1.2, ease: 'expo.out', delay: i * 0.05, scrollTrigger: { trigger: b.parentElement, start: 'top 85%' } }));
 
@@ -405,9 +412,19 @@ function interactions() {
   });
 }
 
+/* ───────────────────────── Work card stack ───────────────────────── */
+// A card taller than the screen pins with a negative top, so it's read in full (link included)
+// before the next one covers it. Runs even with reduced motion, since the stack is plain CSS sticky.
+const NAV_GAP = 96;
+function initStack() {
+  const setStick = () => $$('.work-card').forEach((c) => c.style.setProperty('--stick', `${Math.min(NAV_GAP, window.innerHeight - c.offsetHeight - 24)}px`));
+  setStick();
+  ScrollTrigger.addEventListener('refreshInit', setStick);
+}
+
 /* ───────────────────────── Boot ───────────────────────── */
 render();
 initScroll();
 interactions();
-const start = () => { intro(); animations(); themeTriggers(); ScrollTrigger.sort(); ScrollTrigger.refresh(); };
+const start = () => { initStack(); intro(); animations(); themeTriggers(); ScrollTrigger.sort(); ScrollTrigger.refresh(); };
 document.fonts?.ready ? document.fonts.ready.then(start) : window.addEventListener('load', start);
